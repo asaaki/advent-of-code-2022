@@ -1,0 +1,3 @@
+day0 scratchpad
+solution 1
+solution 2
