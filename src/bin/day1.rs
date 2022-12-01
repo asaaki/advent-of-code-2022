@@ -8,18 +8,17 @@ fn main() -> NullResult {
     let input = args.input.join("\n");
     let inputs: Vec<_> = input.split("\n\n").collect();
 
-    let mut inputs: Vec<isize> = inputs
+    let mut inputs: Vec<u32> = inputs
         .iter()
-        .map(|bag| bag.split("\n").map(|c| c.parse::<isize>().unwrap()).sum())
+        .map(|bag| bag.split("\n").map(|c| c.parse::<u32>().unwrap()).sum())
         .collect();
 
     inputs.sort();
-    inputs.reverse();
 
     let solution = if !args.second {
-        inputs.get(0).unwrap().to_owned()
+        inputs.last().unwrap().to_owned()
     } else {
-        inputs.iter().take(3).sum()
+        inputs.iter().rev().take(3).sum()
     };
 
     if args.example {
