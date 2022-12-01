@@ -24,7 +24,7 @@ pub struct Args {
     pub input: Vec<String>,
 
     #[arg(skip)]
-    pub expected: Option<(String, String)>,
+    pub expected: Option<[String; 2]>,
 }
 
 pub fn args() -> Args {

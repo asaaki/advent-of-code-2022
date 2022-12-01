@@ -7,6 +7,7 @@ mod consts;
 use cli::Args;
 use reqwest::{cookie::Jar, Url};
 use std::{
+    fmt::Display,
     fs::OpenOptions,
     io::{BufRead, BufReader, Write},
 };
@@ -98,8 +99,17 @@ fn read_input(bin: &str, args: &mut Args) -> NullResult {
     if args.example {
         let test2 = input.pop().unwrap();
         let test1 = input.pop().unwrap();
-        args.expected = Some((test1, test2));
+        args.expected = Some([test1, test2]);
     };
     args.input = input;
     Ok(())
+}
+
+pub fn example_output<T: Display>(args: &Args, solution: T) {
+    let expected = args
+        .expected
+        .as_ref()
+        .and_then(|o| o.get(args.second as usize))
+        .unwrap();
+    println!("??? E {expected} == S {solution}");
 }
