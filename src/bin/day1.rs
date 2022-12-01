@@ -13,12 +13,13 @@ fn main() -> NullResult {
         .map(|bag| bag.split("\n").map(|c| c.parse::<u32>().unwrap()).sum())
         .collect();
 
-    inputs.sort();
+    inputs.sort_unstable_by(|a, b| b.cmp(a));
+    let mut it = inputs.iter();
 
     let solution = if !args.second {
-        inputs.last().unwrap().to_owned()
+        it.next().unwrap().to_owned()
     } else {
-        inputs.iter().rev().take(3).sum()
+        it.take(3).sum::<u32>()
     };
 
     if args.example {
