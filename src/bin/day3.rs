@@ -5,7 +5,6 @@ const BIN: &str = env!("CARGO_BIN_NAME");
 fn main() -> NullResult {
     let args = args(BIN)?;
     dbg!(&args);
-    dbg!(INPUTS.get_file("day0.txt"));
 
     // pre-compute inputs if needed and/or shared by solutions
 

@@ -5,45 +5,44 @@ mod cli;
 mod consts;
 
 use cli::Args;
+use fs_err::OpenOptions;
+use include_dir::{include_dir, Dir};
 use reqwest::{cookie::Jar, Url};
 use std::{
     fmt::Display,
-    fs::OpenOptions,
-    io::{BufRead, BufReader, Write},
+    io::{BufRead, Cursor, Write},
 };
 
+use cli::prepare_args;
 use consts::*;
 
 type GenericResult<T> = Result<T, Box<dyn std::error::Error>>;
 pub type NullResult = GenericResult<()>;
 
-pub fn _debug_days_and_parts() {
-    eprintln!("Allowed days: {DAY_VALUES:?}");
-    eprintln!("Allowed parts: {PART_VALUES:?}");
+pub static INPUTS: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/inputs");
+
+pub fn args(bin: &str) -> GenericResult<Args> {
+    let mut args = cli::args();
+    read_input(bin, &mut args)?;
+    Ok(args)
 }
 
-pub fn prepare_or_args(bin: &str) -> GenericResult<Args> {
-    let mut args = cli::args();
-    if args.prepare {
-        make_input_dir()?;
-        make_input_files(bin)?;
-        write_input(bin)?;
-        eprintln!(
-            "Input files prepared. Fill them with data and rerun program."
-        );
-        std::process::exit(0);
-    } else {
-        read_input(bin, &mut args)?;
-        Ok(args)
-    }
+pub fn prepare_cli() -> NullResult {
+    let args = prepare_args();
+    let day = format!("day{}", args.day);
+    make_input_dir()?;
+    make_input_files(&day)?;
+    write_input(&day)?;
+    println!("Input files prepared. Fill them with data and rerun program.");
+    Ok(())
 }
 
 fn make_input_dir() -> std::io::Result<()> {
-    std::fs::create_dir_all(INPUT_DIR)
+    fs_err::create_dir_all(INPUT_DIR)
 }
 
 fn make_input_files(bin: &str) -> std::io::Result<()> {
-    std::fs::create_dir_all(INPUT_DIR)?;
+    fs_err::create_dir_all(INPUT_DIR)?;
     for f in input_files(bin) {
         OpenOptions::new().create(true).write(true).open(f)?;
     }
@@ -51,10 +50,7 @@ fn make_input_files(bin: &str) -> std::io::Result<()> {
 }
 
 fn input_files(bin: &str) -> [String; 2] {
-    [
-        format!("{INPUT_DIR}/{bin}.txt"),
-        format!("{INPUT_DIR}/{bin}_scratchpad.txt"),
-    ]
+    [format!("{bin}.txt"), format!("{bin}_scratchpad.txt")]
 }
 
 fn day(bin: &str) -> &str {
@@ -64,7 +60,7 @@ fn day(bin: &str) -> &str {
 fn write_input(bin: &str) -> NullResult {
     let day = day(bin);
     let data = fetch_input(day)?;
-    let file = &input_files(bin)[0][..]; // infallible, always has 3 elements
+    let file = format!("{INPUT_DIR}/{}", &input_files(bin)[0][..]);
     let mut file = OpenOptions::new().write(true).truncate(true).open(file)?;
     file.write_all(data.as_bytes())?;
     Ok(())
@@ -90,12 +86,12 @@ fn fetch_input(day: &str) -> GenericResult<String> {
 }
 
 fn read_input(bin: &str, args: &mut Args) -> NullResult {
-    let file = &input_files(bin)[args.example as usize][..]; // infallible, always has 3 elements
-    let file = OpenOptions::new().read(true).open(file)?;
-    let mut input: Vec<String> = BufReader::new(file)
-        .lines()
-        .filter_map(Result::ok)
-        .collect();
+    let file = &input_files(bin)[args.example as usize][..];
+    let file = INPUTS.get_file(&file).unwrap();
+    let file = file.contents();
+
+    let mut input: Vec<String> =
+        Cursor::new(file).lines().filter_map(Result::ok).collect();
     if args.example {
         let test2 = input.pop().unwrap();
         let test1 = input.pop().unwrap();

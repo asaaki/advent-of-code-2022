@@ -3,7 +3,7 @@ use aoc_lib::*;
 const BIN: &str = env!("CARGO_BIN_NAME");
 
 fn main() -> NullResult {
-    let args = prepare_or_args(BIN)?;
+    let args = args(BIN)?;
 
     let input = args.input.join("\n");
     let inputs: Vec<_> = input.split("\n\n").collect();
