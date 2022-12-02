@@ -110,11 +110,22 @@ pub fn part(args: &Args) -> usize {
     args.second as _
 }
 
-pub fn example_output<T: Display>(args: &Args, solution: T) {
+#[inline]
+fn example_output<T: Display>(args: &Args, solution: T) {
     let expected = args
         .expected
         .as_ref()
         .and_then(|o| o.get(part(args)))
         .unwrap();
     println!("??? E {expected} == S {solution}");
+}
+
+#[inline]
+pub fn result<T: Display>(args: &Args, solution: T) -> NullResult {
+    if args.example {
+        example_output(&args, solution);
+    } else {
+        println!("solution: {solution}");
+    };
+    Ok(())
 }

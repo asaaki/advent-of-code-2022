@@ -22,10 +22,5 @@ fn main() -> NullResult {
         it.take(3).sum::<u32>()
     };
 
-    if args.example {
-        example_output(&args, solution);
-    } else {
-        println!("solution: {solution}");
-    }
-    Ok(())
+    result(&args, solution)
 }

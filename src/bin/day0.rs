@@ -14,10 +14,5 @@ fn main() -> NullResult {
         todo!("part2")
     };
 
-    if args.example {
-        example_output(&args, solution);
-    } else {
-        println!("solution: {solution}");
-    }
-    Ok(())
+    result(&args, solution)
 }
