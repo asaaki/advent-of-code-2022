@@ -28,7 +28,7 @@ opt-level = 3
 [dependencies]
 aom = { path = "./aom" }
 
-# beef = { version = "0.5.2" }
+beef = { version = "0.5.2" }
 clap = { version = "4.0.29", features = ["derive"] }
 fs-err = { version = "2.9.0", features = ["io_safety"] }
 include_dir = "0.7.3"

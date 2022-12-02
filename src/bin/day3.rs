@@ -4,7 +4,7 @@ const BIN: &str = env!("CARGO_BIN_NAME");
 
 fn main() -> NullResult {
     let args = args(BIN)?;
-    dbg!(&args);
+    let now = Instant::now();
 
     // pre-compute inputs if needed and/or shared by solutions
 
@@ -14,5 +14,6 @@ fn main() -> NullResult {
         todo!("part2")
     };
 
+    eprintln!("time: {:?}", now.elapsed());
     result(&args, solution)
 }

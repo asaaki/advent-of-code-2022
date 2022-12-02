@@ -11,8 +11,12 @@ pub struct Args {
     #[arg(short, long)]
     pub example: bool,
 
+    #[cfg(target_pointer_width = "64")]
     #[arg(skip)]
-    pub input: Vec<String>,
+    pub input: beef::lean::Cow<'static, str>,
+    #[cfg(not(target_pointer_width = "64"))]
+    #[arg(skip)]
+    pub input: beef::Cow<'static, str>,
 
     #[arg(skip)]
     pub expected: Option<[String; 2]>,

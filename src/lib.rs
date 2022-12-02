@@ -16,6 +16,8 @@ use std::{
 use cli::prepare_args;
 use consts::*;
 
+pub use std::time::Instant;
+
 type GenericResult<T> = Result<T, Box<dyn std::error::Error>>;
 pub type NullResult = GenericResult<()>;
 
@@ -86,9 +88,8 @@ fn fetch_input(day: &str) -> GenericResult<String> {
 }
 
 fn read_input(bin: &str, args: &mut Args) -> NullResult {
-    let file = &input_files(bin)[args.example as usize][..];
-    let file = INPUTS.get_file(&file).unwrap();
-    let file = file.contents();
+    let name = &input_files(bin)[args.example as usize][..];
+    let file = INPUTS.get_file(&name).unwrap().contents_utf8().unwrap();
 
     let mut input: Vec<String> =
         Cursor::new(file).lines().filter_map(Result::ok).collect();
@@ -96,8 +97,10 @@ fn read_input(bin: &str, args: &mut Args) -> NullResult {
         let test2 = input.pop().unwrap();
         let test1 = input.pop().unwrap();
         args.expected = Some([test1, test2]);
-    };
-    args.input = input;
+        args.input = input.join("\n").into();
+    } else {
+        args.input = file.into();
+    }
     Ok(())
 }
 
