@@ -20,7 +20,7 @@ fn main() -> NullResult {
                 (Some('C'), Some('X')) => [1 + 6 + score1, 2 + 0 + score2],
                 (Some('C'), Some('Y')) => [2 + 0 + score1, 3 + 3 + score2],
                 (Some('C'), Some('Z')) => [3 + 3 + score1, 1 + 6 + score2],
-                (_, _) => [0, 0],
+                (_, _) => [score1, score2],
             }
     });
 
