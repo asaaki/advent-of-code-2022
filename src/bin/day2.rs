@@ -10,7 +10,7 @@ fn main() -> NullResult {
         // item + outcome
         // item: rock=A=X=1, paper=B=Y=2, scissor=C=Z=3
         // outcome: lose=0, draw=3, win=6
-        match &round[..] {
+        match round.as_str() {
                 "A X" => [1 + 3 + score1, 3 + 0 + score2],
                 "A Y" => [2 + 6 + score1, 1 + 3 + score2],
                 "A Z" => [3 + 0 + score1, 2 + 6 + score2],
