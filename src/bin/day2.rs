@@ -26,12 +26,11 @@ fn main() -> NullResult {
                 (_, _) => [0, 0],
             }
         })
-        .reduce(|[score1, score2], [part1, part2]| {
+        .fold([0, 0], |[score1, score2], [part1, part2]| {
             [score1 + part1, score2 + part2]
-        })
-        .unwrap();
+        });
 
-    let solution = scores[args.second as usize];
+    let solution = scores[part(&args)];
 
     if args.example {
         example_output(&args, solution);

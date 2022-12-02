@@ -105,11 +105,16 @@ fn read_input(bin: &str, args: &mut Args) -> NullResult {
     Ok(())
 }
 
+#[inline]
+pub fn part(args: &Args) -> usize {
+    args.second as _
+}
+
 pub fn example_output<T: Display>(args: &Args, solution: T) {
     let expected = args
         .expected
         .as_ref()
-        .and_then(|o| o.get(args.second as usize))
+        .and_then(|o| o.get(part(args)))
         .unwrap();
     println!("??? E {expected} == S {solution}");
 }
