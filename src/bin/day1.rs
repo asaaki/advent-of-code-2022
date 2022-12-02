@@ -11,7 +11,7 @@ fn main() -> NullResult {
     let mut elves: Vec<Num> = args
         .input
         .split("\n\n")
-        .map(|bag| bag.split("\n").filter_map(|c| c.parse::<Num>().ok()).sum())
+        .map(|bag| bag.split('\n').filter_map(|c| c.parse::<Num>().ok()).sum())
         .collect();
     elves.sort_unstable_by(|a, b| b.cmp(a));
 

@@ -18,35 +18,44 @@ use consts::*;
 
 pub use std::time::Instant;
 
-type GenericResult<T> = Result<T, Box<dyn std::error::Error>>;
+type GenericResult<T> = color_eyre::Result<T>;
 pub type NullResult = GenericResult<()>;
 
 pub static INPUTS: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/inputs");
 
 pub fn args(bin: &str) -> GenericResult<Args> {
+    color_eyre::install()?;
+
     let mut args = cli::args();
     read_input(bin, &mut args)?;
     Ok(args)
 }
 
 pub fn prepare_cli() -> NullResult {
+    color_eyre::install()?;
+
     let args = prepare_args();
     let day = format!("day{}", args.day);
+
     make_input_dir()?;
     make_input_files(&day)?;
     write_input(&day)?;
+
     println!("Input files prepared. Fill them with data and rerun program.");
     Ok(())
 }
 
-fn make_input_dir() -> std::io::Result<()> {
-    fs_err::create_dir_all(INPUT_DIR)
+fn make_input_dir() -> NullResult {
+    fs_err::create_dir_all(INPUT_DIR).map_err(From::from)
 }
 
-fn make_input_files(bin: &str) -> std::io::Result<()> {
+fn make_input_files(bin: &str) -> NullResult {
     fs_err::create_dir_all(INPUT_DIR)?;
     for f in input_files(bin) {
-        OpenOptions::new().create(true).write(true).open(format!("{INPUT_DIR}/{f}"))?;
+        OpenOptions::new()
+            .create(true)
+            .write(true)
+            .open(format!("{INPUT_DIR}/{f}"))?;
     }
     Ok(())
 }
@@ -89,7 +98,7 @@ fn fetch_input(day: &str) -> GenericResult<String> {
 
 fn read_input(bin: &str, args: &mut Args) -> NullResult {
     let name = &input_files(bin)[args.example as usize][..];
-    let file = INPUTS.get_file(&name).unwrap().contents_utf8().unwrap();
+    let file = INPUTS.get_file(name).unwrap().contents_utf8().unwrap();
 
     let mut input: Vec<String> =
         Cursor::new(file).lines().filter_map(Result::ok).collect();
@@ -122,7 +131,7 @@ fn example_output<T: Display>(args: &Args, solution: T) {
 #[inline]
 pub fn result<T: Display>(args: &Args, solution: T) -> NullResult {
     if args.example {
-        example_output(&args, solution);
+        example_output(args, solution);
     } else {
         println!("solution: {solution}");
     };
