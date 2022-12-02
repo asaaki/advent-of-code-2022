@@ -46,7 +46,7 @@ fn make_input_dir() -> std::io::Result<()> {
 fn make_input_files(bin: &str) -> std::io::Result<()> {
     fs_err::create_dir_all(INPUT_DIR)?;
     for f in input_files(bin) {
-        OpenOptions::new().create(true).write(true).open(f)?;
+        OpenOptions::new().create(true).write(true).open(format!("{INPUT_DIR}/{f}"))?;
     }
     Ok(())
 }
