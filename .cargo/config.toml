@@ -8,9 +8,9 @@ r = "run"
 rr = "run --release"
 rrs = "run --profile release-strip"
 
-d0 = "run --release --bin day0"
-d1 = "run --release --bin day1"
-# d2 = "run --release --bin day2"
+d0 = "run --bin day0"
+d1 = "run --bin day1"
+d2 = "run --bin day2"
 
 [env]
 HELLO = { value = "world" }
