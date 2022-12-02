@@ -1,5 +1,5 @@
 [package]
-name = "aoc_proc_macros"
+name = "aom" # Advent of Macros ;-)
 version = "0.1.0"
 edition = "2021"
 

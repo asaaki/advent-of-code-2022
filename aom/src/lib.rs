@@ -12,3 +12,9 @@ pub fn day_str_values(_: TokenStream) -> TokenStream {
     let code = format!("&[{}]", days);
     TokenStream::from_str(&code).unwrap()
 }
+
+#[proc_macro]
+pub fn measure(item: TokenStream) -> TokenStream {
+    println!("item: \"{}\"", item.to_string());
+    item
+}
