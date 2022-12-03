@@ -2,7 +2,7 @@ use aoc_lib::*;
 
 const BIN: &str = env!("CARGO_BIN_NAME");
 
-type Num = u32;
+type N = u32;
 
 fn main() -> NullResult {
     let args = args(BIN)?;
@@ -10,11 +10,11 @@ fn main() -> NullResult {
 
     let elves = args.input.split("\n\n").map(|bag| {
         bag.split('\n')
-            .filter_map(|c| c.parse::<Num>().ok())
-            .sum::<Num>()
+            .filter_map(|c| c.parse::<N>().ok())
+            .sum::<N>()
     });
 
-    let solution: Num = if !args.second {
+    let solution: N = if !args.second {
         elves.max().unwrap().to_owned()
     } else {
         // easiest way to get the top3
