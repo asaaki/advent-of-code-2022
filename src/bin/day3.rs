@@ -6,49 +6,48 @@ fn main() -> NullResult {
     let args = args(BIN)?;
     let now = Instant::now();
 
-    let part1: Vec<_> = args
-        .input
-        .trim_end()
-        .split('\n')
-        .map(|s| {
-            let (left, right) = s.split_at(s.len() / 2);
-            // invariant: both sides always have one common char
-            left.chars()
-                .reduce(|acc, c| if right.contains(c) { c } else { acc })
-                .unwrap()
-        })
-        .map(char2int)
-        .collect();
-
-    let part2: Vec<_> = args.input.trim_end().split('\n').collect();
-    let part2: Vec<_> = part2
-        .chunks_exact(3)
-        .map(|group| {
-            // invariant: all three members always have one common char
-            group[0]
-                .chars()
-                .reduce(|acc, c| {
-                    if group[1].contains(c) && group[2].contains(c) {
-                        c
-                    } else {
-                        acc
-                    }
-                })
-                .unwrap()
-        })
-        .map(char2int)
-        .collect();
+    let lines = args.input.lines();
 
     let solution: u32 = if !args.second {
-        part1.iter().sum()
+        lines
+            .clone()
+            .map(|s| {
+                let (left, right) = s.split_at(s.len() / 2);
+                // invariant: both sides always have one common char
+                left.chars()
+                    .reduce(|acc, c| if right.contains(c) { c } else { acc })
+                    .unwrap()
+            })
+            .map(char2int)
+            .sum()
     } else {
-        part2.iter().sum()
+        let part2e1 = lines.clone().step_by(3);
+        let part2e2 = lines.clone().skip(1).step_by(3);
+        let part2e3 = lines.skip(2).step_by(3);
+
+        part2e1
+            .zip(part2e2.zip(part2e3))
+            .map(|(e1, (e2, e3))| {
+                // invariant: all three members always have one common char
+                e1.chars()
+                    .reduce(|acc, c| {
+                        if e2.contains(c) && e3.contains(c) {
+                            c
+                        } else {
+                            acc
+                        }
+                    })
+                    .unwrap()
+            })
+            .map(char2int)
+            .sum()
     };
 
     eprintln!("time: {:?}", now.elapsed());
     result(&args, solution)
 }
 
+#[inline]
 fn char2int(c: char) -> u32 {
     if c.is_lowercase() {
         c as u32 - 'a' as u32 + 1
