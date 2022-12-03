@@ -36,4 +36,4 @@ include_dir = "0.7.3"
 reqwest = { version = "0.11.13", default-features = false, features = ["rustls-tls", "trust-dns", "blocking", "cookie_store", "cookies", "gzip"] }
 rpmalloc = { version = "0.2.2", features = ["unlimited_cache", "global_cache", "thread_cache", "adaptive_thread_cache"] }
 unstd = "0.1.0"
-yyid = "0.6.0"
+yyid = "0.7.0"
