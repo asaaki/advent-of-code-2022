@@ -2,7 +2,7 @@
 
 My solutions for each task.
 
-Goals and Non-Goals are same as last year:
+Goals and Non-Goals are similar to last year:
 
 ## Goals
 
@@ -16,15 +16,30 @@ Goals and Non-Goals are same as last year:
 - Allow rough edges here and there.
 - Have fun!
 
+## Semi-Goals
+
+- Performance and efficiency.
+
+  Usually try to optimize for less to no allocations if possible.
+  (Maybe next year I'll try to do a `#![no_std]`/embedded setup.)
+
+  Input data gets embedded to also avoid the filesystem. This can bloat the binaries though.
+
+- Relatively idiomatic Rust
+
+  Although not all common patterns will be used; enums are usually common, but AoC puzzles mostly lend themselves to simple string and number crunching. Sometimes shorter code might be more preferrable than the Rusty code.
+
 ## Non-Goals
 
-- Performance and efficiency.¹
-- The most, best, optimal, idiomatic way of writing Rust.²
+- The most, best, optimal, idiomatic way of writing Rust.¹
 - Perfectionism.
 - Competition.
 
-¹ _Unless the task at hand requires it._
-² _Well, a bit of idiomatic code is probably still good._
+¹ <sup>_Well, a bit of idiomatic code is probably still good._</sup>
+
+## Theme / Challenge
+
+Multi-bin crate: Each day becomes its own binary, the CLI only needs switches for which part to run and if example inputs should be used.
 
 ## Setup
 
