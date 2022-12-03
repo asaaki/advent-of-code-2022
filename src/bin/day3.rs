@@ -1,4 +1,5 @@
 use aoc_lib::*;
+use std::ops::ControlFlow;
 
 const BIN: &str = env!("CARGO_BIN_NAME");
 
@@ -14,9 +15,18 @@ fn main() -> NullResult {
             .map(|s| {
                 let (left, right) = s.split_at(s.len() / 2);
                 // invariant: both sides always have one common char
-                left.chars()
-                    .reduce(|acc, c| if right.contains(c) { c } else { acc })
-                    .unwrap()
+                // .try_for_each + ControlFlow for early returns on match
+                let cf = left.chars().try_for_each(|c| {
+                    if right.contains(c) {
+                        return ControlFlow::Break(c);
+                    }
+                    ControlFlow::Continue(())
+                });
+                // without nightly we have to unpack it like that
+                match cf {
+                    ControlFlow::Break(c) => c,
+                    _ => panic!("invariant violated, no matches"),
+                }
             })
             .map(char2int)
             .sum()
@@ -29,15 +39,18 @@ fn main() -> NullResult {
             .zip(part2e2.zip(part2e3))
             .map(|(e1, (e2, e3))| {
                 // invariant: all three members always have one common char
-                e1.chars()
-                    .reduce(|acc, c| {
-                        if e2.contains(c) && e3.contains(c) {
-                            c
-                        } else {
-                            acc
-                        }
-                    })
-                    .unwrap()
+                // .try_for_each + ControlFlow for early returns on match
+                let cf = e1.chars().try_for_each(|c| {
+                    if e2.contains(c) && e3.contains(c) {
+                        return ControlFlow::Break(c);
+                    }
+                    ControlFlow::Continue(())
+                });
+                // without nightly we have to unpack it like that
+                match cf {
+                    ControlFlow::Break(c) => c,
+                    _ => panic!("invariant violated, no matches"),
+                }
             })
             .map(char2int)
             .sum()
