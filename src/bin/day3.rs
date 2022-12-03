@@ -62,11 +62,9 @@ fn main() -> NullResult {
 
 #[inline]
 fn char2int(c: char) -> u32 {
-    if c.is_lowercase() {
-        c as u32 - 'a' as u32 + 1
-    } else if c.is_uppercase() {
-        c as u32 - 'A' as u32 + 27
-    } else {
-        0
+    match c {
+        c @ 'A'..='Z' => c as u32 - 38, // A=65, -65 +27
+        c @ 'a'..='z' => c as u32 - 96, // a=97, -97 +1
+        _ => 0, // we could also panic!(), doesn't matter here though
     }
 }
