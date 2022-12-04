@@ -10,21 +10,13 @@ fn main() -> NullResult {
         .input
         .lines()
         .map(|assignment| {
-            // seems to enable some optimizations;
-            // w/o: ~ 60 µs, with: ~ 50 µs, saved: 10 µs
-            assert!(assignment.contains(&[',', '-']));
-
-            let (elf1, elf2) = assignment.split_once(',').unwrap();
-            let (start1, end1) = elf1.split_once('-').unwrap();
-            let (start1, end1) = (
-                start1.parse::<usize>().unwrap(),
-                end1.parse::<usize>().unwrap(),
-            );
-            let (start2, end2) = elf2.split_once('-').unwrap();
-            let (start2, end2) = (
-                start2.parse::<usize>().unwrap(),
-                end2.parse::<usize>().unwrap(),
-            );
+            let mut splits = assignment
+                .splitn(4, &[',', '-'])
+                .map(|s| s.parse::<u8>().unwrap());
+            let start1 = splits.next().unwrap();
+            let end1 = splits.next().unwrap();
+            let start2 = splits.next().unwrap();
+            let end2 = splits.next().unwrap();
 
             let left = start1 <= start2 && end1 >= end2;
             let right = start2 <= start1 && end2 >= end1;
