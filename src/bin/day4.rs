@@ -22,14 +22,7 @@ fn main() -> NullResult {
             let right = start2 <= start1 && end2 >= end1;
             let covered = left || right;
 
-            let left_start_only = start1 >= start2 && start1 <= end2;
-            let left_end_only = end1 >= start2 && end1 <= end2;
-            let right_start_only = start2 >= start1 && start2 <= end1;
-            let right_end_only = end2 >= start1 && end2 <= end1;
-            let overlap = left_start_only
-                || left_end_only
-                || right_start_only
-                || right_end_only;
+            let overlap = start1 <= end2 && start2 <= end1;
 
             (covered, overlap)
         })
