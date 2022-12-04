@@ -13,6 +13,7 @@ d0 = "run --bin day0"
 d1 = "run --bin day1"
 d2 = "run --bin day2"
 d3 = "run --bin day3"
+d4 = "run --bin day4"
 
 [env]
 HELLO = { value = "world" }
