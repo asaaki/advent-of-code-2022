@@ -2,6 +2,8 @@ use aoc_lib::*;
 
 const BIN: &str = env!("CARGO_BIN_NAME");
 
+const STACK_CAP: usize = 128;
+
 fn main() -> NullResult {
     let args = args(BIN)?;
     let now = Instant::now();
@@ -11,21 +13,20 @@ fn main() -> NullResult {
     let mut stacks = stacks.lines().peekable();
     let max_slots = stacks.peek().unwrap().len() / 4 + 1;
 
-    let mut workset = vec![vec![' '; max_slots * 2]; max_slots];
+    let mut workset = vec![vec![' '; STACK_CAP]; max_slots];
 
-    for (li, l) in stacks.rev().skip(1).enumerate() {
-        let x = &l[1..];
-        for (ci, c) in x.char_indices() {
-            if c.is_alphabetic() && ci % 4 == 0 {
-                workset[ci / 4][li] = c;
-            }
-        }
-    }
+    stacks.rev().skip(1).enumerate().for_each(|(li, l)| {
+        l.char_indices()
+            .skip(1)
+            .step_by(4)
+            .filter(|(_, c)| *c != ' ')
+            .for_each(|(i, c)| workset[i / 4][li] = c);
+    });
     for w in workset.iter_mut() {
         w.retain(|c| c.is_alphabetic());
     }
 
-    let mut tmp_stack = Vec::new();
+    let mut tmp_stack = Vec::with_capacity(STACK_CAP);
 
     for l in instructions.lines() {
         let mut m = l
