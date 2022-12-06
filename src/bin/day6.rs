@@ -12,17 +12,11 @@ fn main() -> NullResult {
         .as_bytes()
         .windows(wsize)
         .enumerate()
-        .fold(None, |pos, (i, s)| {
-            let check = (1..=(wsize - 1))
-                .map(|j| !s[j..].contains(&s[j - 1]))
-                .all(|b| b);
-            if pos.is_none() && check {
-                Some(i + wsize)
-            } else {
-                pos
-            }
-        })
-        .unwrap();
+        // https://stackoverflow.com/a/46766782/653173
+        .find(|(_, s)| !(1..s.len()).any(|i| s[i..].contains(&s[i - 1])))
+        .unwrap()
+        .0
+        + wsize;
 
     eprintln!("time: {:?}", now.elapsed());
     result(&args, solution)
