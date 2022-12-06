@@ -11,6 +11,7 @@ use reqwest::{cookie::Jar, Url};
 use std::{
     fmt::Display,
     io::{BufRead, Cursor, Write},
+    time::Duration,
 };
 
 use cli::prepare_args;
@@ -27,6 +28,7 @@ pub fn args(bin: &str) -> GenericResult<Args> {
     color_eyre::install()?;
 
     let mut args = cli::args();
+    args.day = day(bin).parse().unwrap();
     read_input(bin, &mut args)?;
     Ok(args)
 }
@@ -129,11 +131,21 @@ fn example_output<T: Display>(args: &Args, solution: T) {
 }
 
 #[inline]
-pub fn result<T: Display>(args: &Args, solution: T) -> NullResult {
+pub fn result<T: Display>(
+    solution: T,
+    elapsed: Duration,
+    args: &Args,
+) -> NullResult {
+    let day = args.day;
+    let part = if args.second { 2 } else { 1 };
     if args.example {
         example_output(args, solution);
     } else {
-        println!("solution: {solution}");
+        // [D##.#] solution:  ABCD
+        //         solved in: 123.4µs
+        println!(
+            "[D{day:02}.{part}] solution: {solution}\n        solved in {elapsed:?}"
+        );
     };
     Ok(())
 }

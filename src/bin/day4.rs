@@ -6,7 +6,7 @@ fn main() -> NullResult {
     let args = args(BIN)?;
     let now = Instant::now();
 
-    let sa_pairs: [u32; 2] = args
+    let solution: u32 = args
         .input
         .lines()
         .map(|assignment| {
@@ -18,20 +18,15 @@ fn main() -> NullResult {
             let start2 = splits.next().unwrap();
             let end2 = splits.next().unwrap();
 
-            let left = start1 <= start2 && end1 >= end2;
-            let right = start2 <= start1 && end2 >= end1;
-            let covered = left || right;
-
-            let overlap = start1 <= end2 && start2 <= end1;
-
-            (covered, overlap)
+            if args.second {
+                start1 <= end2 && start2 <= end1
+            } else {
+                let left = start1 <= start2 && end1 >= end2;
+                let right = start2 <= start1 && end2 >= end1;
+                left || right
+            }
         })
-        .fold([0, 0], |[acc_c, acc_o], (covered, overlap)| {
-            let acc_c = if covered { acc_c + 1 } else { acc_c };
-            let acc_o = if overlap { acc_o + 1 } else { acc_o };
-            [acc_c, acc_o]
-        });
+        .fold(0, |acc, b| if b { acc + 1 } else { acc });
 
-    eprintln!("time: {:?}", now.elapsed());
-    result(&args, sa_pairs[part(&args)])
+    result(solution, now.elapsed(), &args)
 }

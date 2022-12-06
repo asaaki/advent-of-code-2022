@@ -3,6 +3,9 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 pub struct Args {
+    #[arg(skip)]
+    pub day: u8,
+
     /// Should the second part be solved? (default is to solve first)
     #[arg(short, long)]
     pub second: bool,

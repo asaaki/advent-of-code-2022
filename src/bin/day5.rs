@@ -53,6 +53,5 @@ fn main() -> NullResult {
     let solution: compact_str::CompactString =
         workset.iter().filter_map(|w| w.last()).collect();
 
-    eprintln!("time: {:?}", now.elapsed());
-    result(&args, solution)
+    result(solution, now.elapsed(), &args)
 }

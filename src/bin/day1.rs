@@ -23,6 +23,5 @@ fn main() -> NullResult {
         elves.iter().take(3).sum()
     };
 
-    eprintln!("time: {:?}", now.elapsed());
-    result(&args, solution)
+    result(solution, now.elapsed(), &args)
 }

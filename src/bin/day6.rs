@@ -16,6 +16,5 @@ fn main() -> NullResult {
         .unwrap()
         + wsize;
 
-    eprintln!("time: {:?}", now.elapsed());
-    result(&args, solution)
+    result(solution, now.elapsed(), &args)
 }

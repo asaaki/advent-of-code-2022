@@ -14,6 +14,5 @@ fn main() -> NullResult {
         todo!("part2")
     };
 
-    eprintln!("time: {:?}", now.elapsed());
-    result(&args, solution)
+    result(solution, now.elapsed(), &args)
 }

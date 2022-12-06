@@ -48,5 +48,47 @@ Multi-bin crate: Each day becomes its own binary, the CLI only needs switches fo
 - prepare task: create files and fetch input (needs session cookie)
 - each day: create bin file, compile, prepare run, code solution, puzzle run
 
+## Solve times and benchmarking
+
+Each day prints its solution in the following format:
+
+```
+[D01.1] solution: 69177
+        solved in 33.63µs
+```
+
+To get a list of all days and parts:
+
+```sh
+### fish ###
+
+for d in (seq 1 5); day$d; day$d -s; end
+
+# as a self deleting function with input last
+function aoc; for d in (seq 1 $argv); day$d; day$d -s; end; functions -e aoc; end; aoc 5
+
+# or if you want to reuse it
+function aoc; for d in (seq 1 $argv); day$d; day$d -s; end; end
+aoc 5 # call this in your current shell session
+
+### bash ###
+
+for d in $(seq 1 5); do day$d; day$d -s; done
+
+# as a self deleting function with input last
+aoc() { for d in $(seq 1 $1); do day$d; day$d -s; done; unset -f aoc; }; aoc 5
+
+# or if you want to reuse it
+aoc() { for d in $(seq 1 $1); do day$d; day$d -s; done }
+aoc 5 # call this in your current shell session
+```
+
+To get a binary runtime comparison with [hyperfine]:
+
+```sh
+hyperfine -N -w 100 "day{day}" "day{day} -s" -P day 1 5
+```
+
 <!-- links -->
 [Advent Of Code 2022]: https://adventofcode.com/2022
+[hyperfine]: https://github.com/sharkdp/hyperfine

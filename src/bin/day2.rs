@@ -30,6 +30,6 @@ fn main() -> NullResult {
         },
     );
 
-    eprintln!("time: {:?}", now.elapsed());
-    result(&args, scores[part(&args)])
+    // NOTE: runtime cost are same for both parts
+    result(scores[part(&args)], now.elapsed(), &args)
 }

@@ -56,8 +56,7 @@ fn main() -> NullResult {
             .sum()
     };
 
-    eprintln!("time: {:?}", now.elapsed());
-    result(&args, solution)
+    result(solution, now.elapsed(), &args)
 }
 
 #[inline]
