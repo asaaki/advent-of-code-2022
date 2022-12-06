@@ -57,6 +57,16 @@ Each day prints its solution in the following format:
         solved in 33.63µs
 ```
 
+Single day helper:
+
+```sh
+# fish
+function day; day$argv; day$argv -s; end
+
+# and call it
+day 5
+```
+
 To get a list of all days and parts:
 
 ```sh
