@@ -11,11 +11,9 @@ fn main() -> NullResult {
         .input
         .as_bytes()
         .windows(wsize)
-        .enumerate()
-        // https://stackoverflow.com/a/46766782/653173
-        .find(|(_, s)| !(1..s.len()).any(|i| s[i..].contains(&s[i - 1])))
+        // https://stackoverflow.com/a/46766782/653173 + reddit adaption (thx /u/BadHumourInside)
+        .position(|s| !(1..s.len()).any(|i| s[i..].contains(&s[i - 1])))
         .unwrap()
-        .0
         + wsize;
 
     eprintln!("time: {:?}", now.elapsed());
