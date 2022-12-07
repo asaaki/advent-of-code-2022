@@ -16,9 +16,12 @@ fn main() -> NullResult {
     let mut cwd = String::with_capacity(70);
     let mut map = HashMap::with_capacity(167);
 
-    for line in args.input.lines() {
+    for line in args
+        .input
+        .lines()
+        .filter(|&l| l != "$ ls" && &l[0..3] != "dir")
+    {
         match line {
-            "$ ls" => { /* noop*/ }
             "$ cd /" => {
                 // use ".", so we can use "/" as delimiter instead
                 cwd.push('.');
@@ -31,7 +34,6 @@ fn main() -> NullResult {
                 cwd.push('/');
                 cwd.push_str(&line[5..]);
             }
-            _ if line.starts_with("dir") => { /* noop*/ }
             _ => {
                 let fsize: N = line
                     .split_ascii_whitespace()
