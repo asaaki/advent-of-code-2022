@@ -1,10 +1,12 @@
 use aoc_lib::*;
 use std::collections::HashMap;
 
+type N = u32;
+
 const BIN: &str = env!("CARGO_BIN_NAME");
-const THRESHOLD: usize = 100_000;
-const DEVICE_MAX: usize = 70_000_000;
-const UPDATE: usize = 30_000_000;
+const THRESHOLD: N = 100_000;
+const DEVICE_MAX: N = 70_000_000;
+const UPDATE: N = 30_000_000;
 
 enum Mode {
     Cd,
@@ -20,7 +22,7 @@ fn main() -> NullResult {
 
     // NOTE: needed capacity measured from **my** inputs; avoids re-allocations during processing
     let mut cwd = String::with_capacity(70);
-    let mut map: HashMap<String, usize> = HashMap::with_capacity(167);
+    let mut map: HashMap<String, N> = HashMap::with_capacity(167);
 
     for line in terminal {
         if line.starts_with('$') {
@@ -49,7 +51,7 @@ fn main() -> NullResult {
             match mode {
                 Mode::Ls => {
                     if !line.starts_with("dir") {
-                        let fsize: usize = line
+                        let fsize: N = line
                             .split_ascii_whitespace()
                             .next()
                             .unwrap()
@@ -70,7 +72,7 @@ fn main() -> NullResult {
     }
 
     let solution = if !args.second {
-        map.values().filter(|&v| v <= &THRESHOLD).sum::<usize>()
+        map.values().filter(|&v| v <= &THRESHOLD).sum::<N>()
     } else {
         let needed = UPDATE - (DEVICE_MAX - map.get(".").unwrap());
         map.values()
