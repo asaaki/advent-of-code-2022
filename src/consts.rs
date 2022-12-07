@@ -1,11 +1,7 @@
 pub(crate) const INPUT_DIR: &str = "inputs";
 
-pub(crate) const APP_USER_AGENT: &str = concat!(
-    env!("CARGO_PKG_NAME"),
-    "/",
-    env!("CARGO_PKG_VERSION"),
-    " (rust; 2022; gh: @asaaki)"
-);
+pub(crate) const APP_USER_AGENT: &str =
+    concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
 pub(crate) const AOC_DOMAIN: &str = "adventofcode.com";
 pub(crate) const AOC_YEAR: &str = "2022";

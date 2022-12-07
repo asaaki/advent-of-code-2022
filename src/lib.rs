@@ -80,6 +80,11 @@ fn write_input(bin: &str) -> NullResult {
 }
 
 fn fetch_input(day: &str) -> GenericResult<String> {
+    let fn_line = line!() - 1;
+    let repo_loc =
+        "https://github.com/asaaki/advent-of-code-2022/blob/main/src/lib.rs";
+    let ua = format!("{APP_USER_AGENT} (2022; Rust; {repo_loc}#{fn_line}; @asaaki [GitHub/Twitter])");
+
     let session = std::fs::read_to_string(".session")?;
     let cookie = format!("session={session}; Domain=.{AOC_DOMAIN}");
     let url = format!("https://{AOC_DOMAIN}").parse::<Url>()?;
@@ -88,7 +93,7 @@ fn fetch_input(day: &str) -> GenericResult<String> {
     cookie_store.add_cookie_str(&cookie, &url);
 
     let client = reqwest::blocking::Client::builder()
-        .user_agent(APP_USER_AGENT)
+        .user_agent(ua)
         .cookie_store(true)
         .cookie_provider(cookie_store.into())
         .build()?;
