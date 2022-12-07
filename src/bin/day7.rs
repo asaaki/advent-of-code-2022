@@ -1,7 +1,7 @@
 use aoc_lib::*;
-use std::collections::HashMap;
 
 type N = u32;
+type HashMap = ahash::AHashMap<String, N>;
 
 const BIN: &str = env!("CARGO_BIN_NAME");
 const THRESHOLD: N = 100_000;
@@ -22,7 +22,7 @@ fn main() -> NullResult {
 
     // NOTE: needed capacity measured from **my** inputs; avoids re-allocations during processing
     let mut cwd = String::with_capacity(70);
-    let mut map: HashMap<String, N> = HashMap::with_capacity(167);
+    let mut map = HashMap::with_capacity(167);
 
     for line in terminal {
         if line.starts_with('$') {
@@ -74,7 +74,7 @@ fn main() -> NullResult {
     let solution = if !args.second {
         map.values().filter(|&v| v <= &THRESHOLD).sum::<N>()
     } else {
-        let needed = UPDATE - (DEVICE_MAX - map.get(".").unwrap());
+        let needed = UPDATE - (DEVICE_MAX - map["."]);
         map.values()
             .filter(|&v| v >= &needed)
             .min()
