@@ -31,11 +31,12 @@ fn main() -> NullResult {
                 let dir = line.split_ascii_whitespace().skip(2).next().unwrap();
                 match dir {
                     "/" => {
-                        cwd = ".".to_owned() // use ".", so we can use "/" as delimiter instead
+                        // use ".", so we can use "/" as delimiter instead
+                        cwd.push('.');
                     }
                     ".." => {
-                        let new = cwd.rsplit_once('/').unwrap().0.to_owned();
-                        cwd = new;
+                        let i = cwd.rfind('/').unwrap();
+                        cwd.truncate(i);
                     }
                     dirname => {
                         cwd.push('/');
