@@ -8,7 +8,7 @@ fn main() -> NullResult {
 
     let x = args.input.lines().next().unwrap().len();
     let y = args.input.lines().count();
-    let edge_count = x as u32 * 2 + y as u32 * 2 - 4; // _ _ | | -4 for overlapping corners
+    let edge_count = (x + y) as u32 * 2 - 4; // _ _ | | -4 for overlapping corners
 
     let mut trees = Vec::with_capacity(y);
     for line in args.input.lines() {
