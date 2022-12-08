@@ -35,9 +35,7 @@ fn main() -> NullResult {
                         let left = l[..tx].iter().all(|n| n < t);
                         let right = l[tx + 1..].iter().all(|n| n < t);
 
-                        let visible = top || bottom || left || right;
-
-                        if visible {
+                        if top || bottom || left || right {
                             v + 1
                         } else {
                             v
@@ -61,28 +59,26 @@ fn main() -> NullResult {
                         let left = l[..tx].iter();
                         let right = l[tx + 1..].iter();
 
-                        let mut s_top = 0;
+                        let (mut s_top, mut s_bottom, mut s_left, mut s_right) = (0,0,0,0);
+
                         for n in top.rev() {
                             s_top += 1;
                             if n >= t {
                                 break;
                             }
                         }
-                        let mut s_bottom = 0;
                         for n in bottom {
                             s_bottom += 1;
                             if n >= t {
                                 break;
                             }
                         }
-                        let mut s_left = 0;
                         for n in left.rev() {
                             s_left += 1;
                             if n >= t {
                                 break;
                             }
                         }
-                        let mut s_right = 0;
                         for n in right {
                             s_right += 1;
                             if n >= t {
