@@ -26,16 +26,16 @@ fn main() -> NullResult {
                     .enumerate()
                     .skip(1)
                     .fold(vv, |v, (tx, t)| {
-                        let top =
-                            trees[..ty].iter().map(|l| &l[tx]).all(|n| n < t);
-                        let bottom = trees[ty + 1..]
-                            .iter()
-                            .map(|l| &l[tx])
-                            .all(|n| n < t);
-                        let left = l[..tx].iter().all(|n| n < t);
-                        let right = l[tx + 1..].iter().all(|n| n < t);
 
-                        if top || bottom || left || right {
+                        // hint: left || right || top || bottom
+                        if l[..tx].iter().all(|n| n < t)
+                            || l[tx + 1..].iter().all(|n| n < t)
+                            || trees[..ty].iter().map(|l| &l[tx]).all(|n| n < t)
+                            || trees[ty + 1..]
+                                .iter()
+                                .map(|l| &l[tx])
+                                .all(|n| n < t)
+                        {
                             v + 1
                         } else {
                             v
@@ -54,44 +54,35 @@ fn main() -> NullResult {
                     .enumerate()
                     .skip(1)
                     .fold(ss, |s, (tx, t)| {
-                        let top = trees[..ty].iter().map(|l| &l[tx]);
-                        let bottom = trees[ty + 1..].iter().map(|l| &l[tx]);
-                        let left = l[..tx].iter();
-                        let right = l[tx + 1..].iter();
+                        let (mut s_top, mut s_bottom, mut s_left, mut s_right) =
+                            (0, 0, 0, 0);
 
-                        let (mut s_top, mut s_bottom, mut s_left, mut s_right) = (0,0,0,0);
-
-                        for n in top.rev() {
+                        for n in trees[..ty].iter().map(|l| &l[tx]).rev() {
                             s_top += 1;
                             if n >= t {
                                 break;
                             }
                         }
-                        for n in bottom {
+                        for n in trees[ty + 1..].iter().map(|l| &l[tx]) {
                             s_bottom += 1;
                             if n >= t {
                                 break;
                             }
                         }
-                        for n in left.rev() {
+                        for n in l[..tx].iter().rev() {
                             s_left += 1;
                             if n >= t {
                                 break;
                             }
                         }
-                        for n in right {
+                        for n in l[tx + 1..].iter() {
                             s_right += 1;
                             if n >= t {
                                 break;
                             }
                         }
-                        let score = s_top * s_bottom * s_left * s_right;
 
-                        if score > s {
-                            score
-                        } else {
-                            s
-                        }
+                        (s_top * s_bottom * s_left * s_right).max(s)
                     })
             })
     };
