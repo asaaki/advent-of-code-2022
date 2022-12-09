@@ -13,7 +13,7 @@ fn main() -> NullResult {
     let args = args(BIN)?;
     let now = Instant::now();
 
-    let mut visited: HashSet<Pos> = HashSet::new();
+    let mut visited: HashSet<Pos> = HashSet::with_capacity(10_000);
     let mut head = Pos::default();
     let mut tails = [Pos::default(); 9];
 
