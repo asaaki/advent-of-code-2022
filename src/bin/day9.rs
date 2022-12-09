@@ -47,7 +47,7 @@ fn main() -> NullResult {
 fn follow(lead: &Pos, t: &mut Pos) {
     let dx = lead.x - t.x;
     let dy = lead.y - t.y;
-    if (dx.abs() + dy.abs() >= 2) && (dx.abs() > 1 || dy.abs() > 1) {
+    if (dx.abs() + dy.abs() > 1) && (dx.abs() > 1 || dy.abs() > 1) {
         t.x += dx.signum();
         t.y += dy.signum()
     }
