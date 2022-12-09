@@ -26,7 +26,6 @@ fn main() -> NullResult {
                     .enumerate()
                     .skip(1)
                     .fold(vv, |v, (tx, t)| {
-
                         // hint: left || right || top || bottom
                         if l[..tx].iter().all(|n| n < t)
                             || l[tx + 1..].iter().all(|n| n < t)
