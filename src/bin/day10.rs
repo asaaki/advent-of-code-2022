@@ -12,15 +12,11 @@ fn main() -> NullResult {
         let mut strip = Vec::with_capacity(250);
         strip.push(regv);
         for op in args.input.lines() {
-            match op {
-                "noop" => strip.push(regv),
-                _ if op.starts_with("addx ") => {
-                    let v: &i32 = &op[5..].parse().unwrap();
-                    strip.push(regv);
-                    strip.push(regv);
-                    regv += v;
-                }
-                _ => panic!("shall not happen"),
+            strip.push(regv);
+            if op.starts_with("a") {
+                let v: &i32 = &op[5..].parse().unwrap();
+                strip.push(regv);
+                regv += v;
             }
         }
         strip
@@ -35,16 +31,10 @@ fn main() -> NullResult {
         let mut crt = [32; 240]; // 32=' ' (better readability than '.')
         let mut cycle = 0;
         for op in args.input.lines() {
-            match op {
-                "noop" => {
-                    pixel_work(regv, &mut cycle, &mut crt);
-                }
-                _ if op.starts_with("addx ") => {
-                    pixel_work(regv, &mut cycle, &mut crt);
-                    pixel_work(regv, &mut cycle, &mut crt);
-                    regv += &op[5..].parse().unwrap();
-                }
-                _ => panic!("shall not happen"),
+            pixel_work(regv, &mut cycle, &mut crt);
+            if op.starts_with("a") {
+                pixel_work(regv, &mut cycle, &mut crt);
+                regv += &op[5..].parse().unwrap();
             }
         }
         crt.chunks(40)
