@@ -33,6 +33,9 @@ fn main() -> NullResult {
                 visited.insert(tails[0]);
             } else {
                 for i in 1..9 {
+                    // Learning from day 11: this can be avoided by using RefCell;
+                    // the left side does not need to be mutable, we just follow the
+                    // rabbi… erm the borrow checker here.
                     let (left, right) = tails.split_at_mut(i);
                     follow(&left[i - 1], &mut right[0]);
                 }
