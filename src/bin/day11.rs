@@ -85,7 +85,7 @@ fn make_monkeys(args: &Args) -> Vec<Monkey> {
                     Op::Square
                 }
             }
-            _ => panic!("shall not happen"), // Box::new(|old| old)
+            _ => panic!("shall not happen")
         };
 
         monkeys.push(Monkey {
