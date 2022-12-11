@@ -4,7 +4,7 @@ static ALLOC: rpmalloc::RpMalloc = rpmalloc::RpMalloc;
 mod cli;
 mod consts;
 
-use cli::Args;
+// use cli::Args;
 use fs_err::OpenOptions;
 use include_dir::{include_dir, Dir};
 use reqwest::{cookie::Jar, Url};
@@ -17,6 +17,7 @@ use std::{
 use cli::prepare_args;
 use consts::*;
 
+pub use cli::Args;
 pub use std::time::Instant;
 
 type GenericResult<T> = color_eyre::Result<T>;
