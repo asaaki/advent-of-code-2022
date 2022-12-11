@@ -2,18 +2,20 @@ use std::cell::RefCell;
 
 use aoc_lib::*;
 
+type N = u64;
+
 const BIN: &str = env!("CARGO_BIN_NAME");
 
 enum Op {
-    Add(i64),
-    Mul(i64),
+    Add(N),
+    Mul(N),
     Square,
 }
 
 struct Monkey {
-    items: RefCell<Vec<i64>>,
+    items: RefCell<Vec<N>>,
     op: Op,
-    div: i64,
+    div: N,
     targets: [usize; 2],
 }
 
@@ -24,7 +26,7 @@ fn main() -> NullResult {
     let monkeys = make_monkeys(&args);
 
     let solution = if args.second {
-        let modulus: i64 = monkeys.iter().map(|m| m.div).product();
+        let modulus: N = monkeys.iter().map(|m| m.div).product();
         solve(monkeys, 10_000, |x| x % modulus)
     } else {
         solve(monkeys, 20, |x| x / 3)
@@ -39,11 +41,11 @@ fn make_monkeys(args: &Args) -> Vec<Monkey> {
         let mut lines = def.lines().skip(1);
         let items: Vec<_> = lines.next().unwrap()[18..]
             .split(", ")
-            .filter_map(|s| s.parse::<i64>().ok())
+            .filter_map(|s| s.parse::<N>().ok())
             .collect();
         let (operator, num) =
             lines.next().unwrap()[23..].split_once(' ').unwrap();
-        let div: i64 = lines
+        let div: N = lines
             .next()
             .unwrap()
             .split_once("by ")
@@ -70,14 +72,14 @@ fn make_monkeys(args: &Args) -> Vec<Monkey> {
 
         let op = match operator {
             "+" => {
-                if let Ok(v) = num.parse::<i64>() {
+                if let Ok(v) = num.parse::<N>() {
                     Op::Add(v)
                 } else {
                     Op::Mul(2)
                 }
             }
             "*" => {
-                if let Ok(v) = num.parse::<i64>() {
+                if let Ok(v) = num.parse::<N>() {
                     Op::Mul(v)
                 } else {
                     Op::Square
@@ -98,9 +100,9 @@ fn make_monkeys(args: &Args) -> Vec<Monkey> {
 
 fn solve(
     monkeys: Vec<Monkey>,
-    rounds: i64,
-    worry_fn: impl Fn(i64) -> i64,
-) -> i64 {
+    rounds: N,
+    worry_fn: impl Fn(N) -> N,
+) -> N {
     let mut inspections = vec![0; monkeys.len()];
     for _ in 0..rounds {
         for (i, m) in monkeys.iter().enumerate() {
@@ -120,6 +122,6 @@ fn solve(
         }
     }
     inspections.sort_unstable_by(|a, b| b.cmp(a));
-    let solution: i64 = inspections.iter().take(2).product();
+    let solution: N = inspections.iter().take(2).product();
     solution
 }
