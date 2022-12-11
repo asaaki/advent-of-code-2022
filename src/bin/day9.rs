@@ -1,5 +1,6 @@
 use ahash::{HashSet, HashSetExt};
 use aoc_lib::*;
+use std::{cell::RefCell};
 
 const BIN: &str = env!("CARGO_BIN_NAME");
 
@@ -9,13 +10,15 @@ struct Pos {
     y: i32,
 }
 
+const EMPTY: RefCell<Pos> = RefCell::new(Pos { x: 0, y: 0 });
+
 fn main() -> NullResult {
     let args = args(BIN)?;
     let now = Instant::now();
 
     let mut visited: HashSet<Pos> = HashSet::with_capacity(10_000);
     let mut head = Pos::default();
-    let mut tails = [Pos::default(); 9];
+    let tails = [EMPTY; 9];
 
     for instruction in args.input.lines() {
         let (direction, amount) = instruction.split_once(' ').unwrap();
@@ -27,19 +30,15 @@ fn main() -> NullResult {
                 "R" => head.x += 1,
                 _ => panic!("shall not happen"),
             }
-            follow(&head, &mut tails[0]);
+            follow(&head, &mut tails[0].borrow_mut());
 
             if !args.second {
-                visited.insert(tails[0]);
+                visited.insert(tails[0].borrow().to_owned());
             } else {
                 for i in 1..9 {
-                    // Learning from day 11: this can be avoided by using RefCell;
-                    // the left side does not need to be mutable, we just follow the
-                    // rabbi… erm the borrow checker here.
-                    let (left, right) = tails.split_at_mut(i);
-                    follow(&left[i - 1], &mut right[0]);
+                    follow(&tails[i - 1].borrow(), &mut tails[i].borrow_mut());
                 }
-                visited.insert(tails[8]);
+                visited.insert(tails[8].borrow().to_owned());
             }
         }
     }
