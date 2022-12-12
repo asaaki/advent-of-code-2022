@@ -85,7 +85,7 @@ fn make_monkeys(args: &Args) -> Vec<Monkey> {
                     Op::Square
                 }
             }
-            _ => panic!("shall not happen")
+            _ => panic!("shall not happen"),
         };
 
         monkeys.push(Monkey {
@@ -98,11 +98,7 @@ fn make_monkeys(args: &Args) -> Vec<Monkey> {
     monkeys
 }
 
-fn solve(
-    monkeys: Vec<Monkey>,
-    rounds: N,
-    worry_fn: impl Fn(N) -> N,
-) -> N {
+fn solve(monkeys: Vec<Monkey>, rounds: N, worry_fn: impl Fn(N) -> N) -> N {
     let mut inspections = vec![0; monkeys.len()];
     for _ in 0..rounds {
         for (i, m) in monkeys.iter().enumerate() {
