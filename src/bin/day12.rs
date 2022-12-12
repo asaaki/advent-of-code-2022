@@ -14,67 +14,44 @@ impl Pos {
         map: &Map,
         max_x: &usize,
         max_y: &usize,
+        rev: bool,
     ) -> Vec<(Pos, usize)> {
         let &Pos(x, y, current) = self;
         let mut possible_moves = Vec::with_capacity(4);
-        let max_h = current + 1;
+        let max_h = if rev { Z - current } else { current } + 1;
         if y > 0 {
-            let top = map.get(y - 1).and_then(|ly| ly.get(x)).unwrap();
-            if top <= &max_h {
+            let top = map
+                .get(y - 1)
+                .and_then(|ly| ly.get(x))
+                .unwrap();
+            if (if rev { Z - top } else { *top }) <= max_h {
                 possible_moves.push((Pos(x, y - 1, *top), 1));
             }
         }
         if y < *max_y {
-            let bottom = map.get(y + 1).and_then(|ly| ly.get(x)).unwrap();
-            if bottom <= &max_h {
+            let bottom = map
+                .get(y + 1)
+                .and_then(|ly| ly.get(x))
+                .unwrap();
+            if (if rev { Z - bottom } else { *bottom }) <= max_h {
                 possible_moves.push((Pos(x, y + 1, *bottom), 1));
             }
         }
         if x > 0 {
-            let left = map.get(y).and_then(|ly| ly.get(x - 1)).unwrap();
-            if left <= &max_h {
+            let left = map
+                .get(y)
+                .and_then(|ly| ly.get(x - 1))
+                .unwrap();
+            if (if rev { Z - left } else { *left }) <= max_h {
                 possible_moves.push((Pos(x - 1, y, *left), 1));
             }
         }
         if x < *max_x {
-            let right = map.get(y).and_then(|ly| ly.get(x + 1)).unwrap();
-            if right <= &max_h {
-                possible_moves.push((Pos(x + 1, y, *right), 1));
-            }
-        }
-        possible_moves
-    }
-
-    fn rev_successors(
-        &self,
-        map: &Map,
-        max_x: &usize,
-        max_y: &usize,
-    ) -> Vec<(Pos, usize)> {
-        let &Pos(x, y, current) = self;
-        let mut possible_moves = Vec::with_capacity(4);
-        let max_h = (Z - current) + 1;
-        if y > 0 {
-            let top = map.get(y - 1).and_then(|ly| ly.get(x)).unwrap();
-            if (Z - top) <= max_h {
-                possible_moves.push((Pos(x, y - 1, *top), 1));
-            }
-        }
-        if y < *max_y {
-            let bottom = map.get(y + 1).and_then(|ly| ly.get(x)).unwrap();
-            if (Z - bottom) <= max_h {
-                possible_moves.push((Pos(x, y + 1, *bottom), 1));
-            }
-        }
-        if x > 0 {
-            let left = map.get(y).and_then(|ly| ly.get(x - 1)).unwrap();
-            if (Z - left) <= max_h {
-                possible_moves.push((Pos(x - 1, y, *left), 1));
-            }
-        }
-        if x < *max_x {
-            let right = map.get(y).and_then(|ly| ly.get(x + 1)).unwrap();
-            if (Z - right) <= max_h {
+            let right = map
+                .get(y)
+                .and_then(|ly| ly.get(x + 1))
+                .unwrap();
+            if (if rev { Z - right } else { *right }) <= max_h {
                 possible_moves.push((Pos(x + 1, y, *right), 1));
             }
         }
@@ -95,7 +72,6 @@ fn main() -> NullResult {
     let mut map: Vec<Vec<_>> = Vec::with_capacity(max_y);
 
     let mut start_p1 = Pos::default();
-    let mut hike_starts = Vec::default();
     let mut goal = Pos::default();
 
     for (y, line) in args.input.lines().enumerate() {
@@ -105,18 +81,12 @@ fn main() -> NullResult {
                 'S' => {
                     start_p1 = Pos(x, y, A);
                     xline.push(A);
-                    hike_starts.push(Pos(x, y, A))
                 }
                 'E' => {
                     goal = Pos(x, y, Z);
                     xline.push(Z);
                 }
-                h => {
-                    if h == 'a' {
-                        hike_starts.push(Pos(x, y, A))
-                    }
-                    xline.push(h as u8)
-                }
+                h => xline.push(h as u8),
             }
         }
         map.push(xline);
@@ -125,7 +95,7 @@ fn main() -> NullResult {
     let solution: usize = if !args.second {
         dijkstra(
             &start_p1,
-            |p| p.successors(&map, &max_x, &max_y),
+            |p| p.successors(&map, &max_x, &max_y, false),
             |p| *p == goal,
         )
         .unwrap()
@@ -133,12 +103,11 @@ fn main() -> NullResult {
     } else {
         dijkstra(
             &goal,
-            |p| p.rev_successors(&map, &max_x, &max_y),
+            |p| p.successors(&map, &max_x, &max_y, true),
             |p| p.2 == A,
         )
         .unwrap()
         .1
     };
-
     result(solution, now.elapsed(), &args)
 }
