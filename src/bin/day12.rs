@@ -1,66 +1,50 @@
 use aoc_lib::*;
-use pathfinding::prelude::dijkstra;
+use pathfinding::prelude::bfs;
 
 const BIN: &str = env!("CARGO_BIN_NAME");
+
+const A: u8 = 'a' as u8;
+const E: u8 = 'E' as u8;
+const S: u8 = 'S' as u8;
+const Z: u8 = 'z' as u8;
+
+const NEIGHBOURS: [(i32, i32); 4] = [(1, 0), (0, 1), (-1, 0), (0, -1)];
 
 type Map = Vec<Vec<u8>>;
 
 #[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
-struct Pos(usize, usize, u8);
+struct Pos(usize, usize);
 
 impl Pos {
-    fn successors(
-        &self,
-        map: &Map,
-        max_x: &usize,
-        max_y: &usize,
-        rev: bool,
-    ) -> Vec<(Pos, usize)> {
-        let &Pos(x, y, current) = self;
+    fn successors(&self, map: &Map, rev: bool) -> Vec<Pos> {
+        let &Pos(x, y) = self;
+        let max_h = if rev { Z - map[y][x] } else { map[y][x] } + 1;
         let mut possible_moves = Vec::with_capacity(4);
-        let max_h = if rev { Z - current } else { current } + 1;
-        if y > 0 {
-            let top = map
-                .get(y - 1)
-                .and_then(|ly| ly.get(x))
-                .unwrap();
-            if (if rev { Z - top } else { *top }) <= max_h {
-                possible_moves.push((Pos(x, y - 1, *top), 1));
+
+        for (nx, ny) in NEIGHBOURS {
+            if x == 0 && nx == -1 {
+                continue;
+            }
+            if y == 0 && ny == -1 {
+                continue;
+            }
+            if x == map[0].len() - 1 && nx == 1 {
+                continue;
+            }
+            if y == map.len() - 1 && ny == 1 {
+                continue;
+            }
+
+            let sx = ((x as i32) + nx) as usize;
+            let sy = ((y as i32) + ny) as usize;
+            if max_h >= (if rev { Z - map[sy][sx] } else { map[sy][sx] }) {
+                possible_moves.push(Pos(sx, sy));
             }
         }
-        if y < *max_y {
-            let bottom = map
-                .get(y + 1)
-                .and_then(|ly| ly.get(x))
-                .unwrap();
-            if (if rev { Z - bottom } else { *bottom }) <= max_h {
-                possible_moves.push((Pos(x, y + 1, *bottom), 1));
-            }
-        }
-        if x > 0 {
-            let left = map
-                .get(y)
-                .and_then(|ly| ly.get(x - 1))
-                .unwrap();
-            if (if rev { Z - left } else { *left }) <= max_h {
-                possible_moves.push((Pos(x - 1, y, *left), 1));
-            }
-        }
-        if x < *max_x {
-            let right = map
-                .get(y)
-                .and_then(|ly| ly.get(x + 1))
-                .unwrap();
-            if (if rev { Z - right } else { *right }) <= max_h {
-                possible_moves.push((Pos(x + 1, y, *right), 1));
-            }
-        }
+
         possible_moves
     }
 }
-
-const A: u8 = 'a' as u8;
-const Z: u8 = 'z' as u8;
 
 fn main() -> NullResult {
     let args = args(BIN)?;
@@ -68,46 +52,38 @@ fn main() -> NullResult {
 
     let max_y = args.input.lines().count() - 1;
     let max_x = args.input.lines().next().unwrap().len() - 1;
-
     let mut map: Vec<Vec<_>> = Vec::with_capacity(max_y);
 
-    let mut start_p1 = Pos::default();
-    let mut goal = Pos::default();
+    let (mut start_p1, mut goal) = (Pos::default(), Pos::default());
 
     for (y, line) in args.input.lines().enumerate() {
         let mut xline = Vec::with_capacity(max_x);
-        for (x, c) in line.char_indices() {
+        for (x, c) in line.as_bytes().iter().enumerate() {
             match c {
-                'S' => {
-                    start_p1 = Pos(x, y, A);
+                &S => {
+                    start_p1 = Pos(x, y);
                     xline.push(A);
                 }
-                'E' => {
-                    goal = Pos(x, y, Z);
+                &E => {
+                    goal = Pos(x, y);
                     xline.push(Z);
                 }
-                h => xline.push(h as u8),
+                h => xline.push(*h),
             }
         }
         map.push(xline);
     }
 
     let solution: usize = if !args.second {
-        dijkstra(
-            &start_p1,
-            |p| p.successors(&map, &max_x, &max_y, false),
-            |p| *p == goal,
-        )
-        .unwrap()
-        .1
+        bfs(&start_p1, |p| p.successors(&map, false), |p| *p == goal)
+            .unwrap()
+            .len()
+            - 1
     } else {
-        dijkstra(
-            &goal,
-            |p| p.successors(&map, &max_x, &max_y, true),
-            |p| p.2 == A,
-        )
-        .unwrap()
-        .1
+        bfs(&goal, |p| p.successors(&map, true), |p| map[p.1][p.0] == A)
+            .unwrap()
+            .len()
+            - 1
     };
     result(solution, now.elapsed(), &args)
 }
