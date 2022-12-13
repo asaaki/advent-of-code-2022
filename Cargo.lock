@@ -32,6 +32,8 @@ dependencies = [
  "pathfinding",
  "reqwest",
  "rpmalloc",
+ "serde",
+ "serde_json",
  "tinyvec",
  "unstd",
  "yyid",
