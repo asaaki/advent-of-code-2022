@@ -1,16 +1,14 @@
 use aoc_lib::*;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use std::cmp::Ordering::*;
 
 const BIN: &str = env!("CARGO_BIN_NAME");
 
-#[derive(
-    Debug, Deserialize, Serialize, Clone, PartialEq, Eq, PartialOrd, Ord,
-)]
+#[derive(Debug, Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(untagged)]
 enum ListItem {
     L(Vec<ListItem>),
-    V(i32),
+    V(u8),
 }
 use ListItem::*;
 
