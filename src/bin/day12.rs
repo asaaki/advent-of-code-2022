@@ -52,6 +52,8 @@ fn main() -> NullResult {
 
     let max_y = args.input.lines().count() - 1;
     let max_x = args.input.lines().next().unwrap().len() - 1;
+    // https://www.reddit.com/r/adventofcode/comments/zjnruc/comment/izwf0ay/?context=3
+    // pathfinding has a Matrix, which we could use here instead of this vecvec
     let mut map: Vec<Vec<_>> = Vec::with_capacity(max_y);
 
     let (mut start_p1, mut goal) = (Pos::default(), Pos::default());
