@@ -162,22 +162,3 @@ fn process_map(
         *spixel = (0, x);
     }
 }
-
-// fn render_map(map: &Map, e: &mut ConsoleEngine, spixel_count: &i32) {
-//     e.check_resize();
-//     e.clear_screen();
-
-//     for (y, line) in map.iter().enumerate() {
-//         for (x, c) in line.iter().enumerate() {
-//             e.set_pxl((x+1) as i32, y as i32,pixel::pxl(c.to_pixel()));
-//         }
-//     }
-
-//     let digits = spixel_count.to_string();
-//     let digits = digits.char_indices();
-//     for (i,c) in digits {
-//         e.set_pxl((i+1) as i32, 0, pixel::pxl(c));
-//     }
-
-//     e.draw();
-// }
