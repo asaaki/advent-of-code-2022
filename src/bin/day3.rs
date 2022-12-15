@@ -25,7 +25,7 @@ fn main() -> NullResult {
                 // without nightly we have to unpack it like that
                 match cf {
                     ControlFlow::Break(c) => c,
-                    _ => panic!("invariant violated, no matches"),
+                    _ => unreachable!(),
                 }
             })
             .map(char2int)
@@ -49,7 +49,7 @@ fn main() -> NullResult {
                 // without nightly we have to unpack it like that
                 match cf {
                     ControlFlow::Break(c) => c,
-                    _ => panic!("invariant violated, no matches"),
+                    _ => unreachable!(),
                 }
             })
             .map(char2int)

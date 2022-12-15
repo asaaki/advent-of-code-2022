@@ -25,7 +25,7 @@ fn main() -> NullResult {
                 "D" => head.y -= 1,
                 "L" => head.x -= 1,
                 "R" => head.x += 1,
-                _ => {} // panic!("shall not happen"),
+                _ => unreachable!(),
             }
             follow(&head, &mut tails[0]);
 
